@@ -17,7 +17,7 @@ app.use((req, res, next) => {
 
 // Vulnerable Endpoint
 // Vulnerable Endpoint
-app.post('/', (req, res) => {
+app.post('/', (req, apiRes) => {
     console.log('[CTF] Received POST request');
 
     try {
@@ -60,9 +60,9 @@ app.post('/', (req, res) => {
                         const match = digest.match(/a=(.*?);/);
                         const result = match ? match[1] : 'unknown';
 
-                        res.setHeader('X-Action-Redirect', `/dashboard?session=${result}&admin=true`);
-                        res.setHeader('Location', `/dashboard?session=${result}`);
-                        res.status(303).json({
+                        apiRes.setHeader('X-Action-Redirect', `/dashboard?session=${result}&admin=true`);
+                        apiRes.setHeader('Location', `/dashboard?session=${result}`);
+                        apiRes.status(303).json({
                             status: "REDIRECT",
                             destination: "/dashboard",
                             leaked_data: result
@@ -79,7 +79,7 @@ app.post('/', (req, res) => {
 
     // Default response if no exploit worked
     console.log('[CTF] Request received, but no valid exploit payload executed.');
-    res.status(401).json({
+    apiRes.status(401).json({
         error: "Unauthorized",
         message: "Invalid credentials or request format."
     });

