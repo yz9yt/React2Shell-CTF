@@ -86,6 +86,12 @@ curl -i -X POST http://localhost:5555/ \
 ## 🏆 5. Analysis & Verification
 
 Look at the output. You should see a **303 See Other** or **307 Temporary Redirect**.
+Start the CTF challenge target (make sure to use `--build` to install netcat):
+
+```bash
+cd ctf_challenge
+docker-compose up --build
+```
 Check the headers:
 
 ```http

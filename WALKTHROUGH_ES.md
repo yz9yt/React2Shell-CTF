@@ -6,8 +6,12 @@ Esta guía está diseñada para ayudarte a **entender** la vulnerabilidad, no so
 
 ## 🏗️ 1. Configuración y Reconocimiento
 
-Primero, asegúrate de que tu objetivo esté funcionando (ver README).
-Ábrelo en tu navegador: `http://localhost:5555`
+Inicia el objetivo del reto CTF (asegúrate de usar `--build` para instalar netcat):
+
+```bash
+cd ctf_challenge
+docker-compose up --build
+```
 
 ### 🕵️‍♂️ El Objetivo
 Queremos lograr **Ejecución Remota de Código (RCE)** en el servidor.
