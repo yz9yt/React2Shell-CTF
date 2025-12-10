@@ -38,6 +38,11 @@ We need to construct a multipart request with this JSON structure:
 
 We will use `curl` to send this request.
 
+> **💡 Beginner's Note:**
+> *   **What is `curl`?** It's a command-line tool that lets us "talk" to servers directly, without using a graphical browser like Chrome.
+> *   **Where do I run it?** You must open your system's terminal (Terminal on Linux/Mac, PowerShell/CMD on Windows). This is **NOT** run in the browser console.
+> *   **Do I need to install it?** `curl` comes pre-installed on most systems. Type `curl --version` in your terminal to check. If you see a version number, you're good to go!
+
 ### Step 3.1: The Command
 We want to run a simple math calculation to prove RCE: `1337 * 2`.
 In Node.js, we can use `child_process`:
