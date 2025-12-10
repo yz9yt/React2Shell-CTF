@@ -43,9 +43,25 @@ git clone https://github.com/yz9yt/React2Shell-CTF.git
 # Enter the directory
 cd React2Shell-CTF
 
-# Start with Docker
-docker-compose up --build
+# Start with Docker (requires sudo)
+sudo docker-compose up --build
 ```
+
+The application will be available at:  
+👉 **`http://localhost:5555`**
+
+---
+
+## 📚 Solution & Walkthrough
+
+Need help? We have prepared a comprehensive step-by-step guide to help you understand the exploit path.
+
+### 📖 [Read the Walkthrough](WALKTHROUGH.md)
+
+This document explains:
+1.  **Setup**: How to verify the environment.
+2.  **Exploitation**: Detailed manual exploitation steps using `curl`.
+3.  **Verification**: How to confirm Remote Code Execution (RCE).
 
 ---
 Happy Hacking! 🕵️‍♂️
