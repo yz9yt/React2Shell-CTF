@@ -32,38 +32,45 @@ Using this material to attack targets without prior mutual consent is illegal.
 
 ---
 
-## 🛠️ Local Installation
 
-To run this CTF on your machine:
-
-```bash
-# Clone the repository
-git clone https://github.com/yz9yt/React2Shell-CTF.git
-
-# Enter the directory
-cd React2Shell-CTF
-
-# Start with Docker (requires sudo)
-sudo docker-compose up --build
-```
-
-The application will be available at:  
-👉 **`http://localhost:5555`**
+### Solution & Walkthrough 📚
+**Stuck?** Check out the step-by-step guides (now with Native Node.js Payload!):
+*   📄 **[English Guide (WALKTHROUGH_EN.md)](./WALKTHROUGH_EN.md)**
+*   📄 **[Guía en Español (WALKTHROUGH_ES.md)](./WALKTHROUGH_ES.md)**
 
 ---
 
-## 📚 Solution & Walkthrough
+## 🔍 How the Exploit Works
+The vulnerability (CVE-2025-55182) exists in how the React Server Components deserializer handles specific object properties.
 
-Need help? We have prepared a comprehensive step-by-step guide to help you understand the exploit path.
+![Payload Logic](./payload_logic.png)
 
-### 📖 Choose your language:
-*   🇬🇧 **[English Walkthrough](WALKTHROUGH_EN.md)**
-*   🇪🇸 **[Guía en Español](WALKTHROUGH_ES.md)**
+1.  **Injection**: The attacker sends a malicious JSON payload via a Multipart `POST` request.
+2.  **Deserialization**: The server parses the JSON.
+3.  **Property Gadget**: The `_response._prefix` property is mistrusted by the server. Instead of treating it as data, the server **evaluates** it as code.
+4.  **RCE**: This `eval()` allows arbitary Javascript execution, leading to Remote Code Execution (RCE) and full system compromise.
 
-This document explains:
-1.  **Setup**: How to verify the environment.
-2.  **Exploitation**: Detailed manual exploitation steps using `curl`.
-3.  **Verification**: How to confirm Remote Code Execution (RCE).
+---
+
+## �️ Local Installation
+
+### Prerequisites
+*   Docker & Docker Compose
+
+### Launch
+```bash
+git clone https://github.com/yz9yt/React2Shell-CTF.git
+cd React2Shell-CTF
+sudo docker-compose up --build
+```
+> **Note**: Use `--build` to ensure `netcat` is installed for the Reverse Shell challenge!
+
+The challenge will be available at: **http://localhost:5555**
+
+### 🎯 The Challenge
+1.  Analyze the `server.js` code.
+2.  Craft a payload to execute code.
+3.  **Bonus**: Can you pop a **Reverse Shell**? 🐚
 
 ---
 Happy Hacking! 🕵️‍♂️
