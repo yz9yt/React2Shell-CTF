@@ -1,0 +1,7 @@
+version: '3'
+services:
+  ctf-target:
+    build: .
+    ports:
+      - "5555:5555"
+    restart: always
