@@ -34,7 +34,7 @@ We need to construct a multipart request with this JSON structure:
 
 ---
 
-## �️ 3. Crafting the Payload (Step-by-Step)
+## 🛠️ 3. Crafting the Payload (Step-by-Step)
 
 We will use `curl` to send this request.
 
@@ -92,4 +92,4 @@ Location: /dashboard?session=2674
 2.  **What does this mean?** -> The server executed our math operation!
 3.  **What else could you run?** -> `whoami`, `ls`, `cat /etc/passwd`...
 
-**Congratulations! You have successfully analyzed and exploited React2Shell.** �
+**Congratulations! You have successfully analyzed and exploited React2Shell.** 🚩

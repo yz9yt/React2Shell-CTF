@@ -56,7 +56,9 @@ The application will be available at:
 
 Need help? We have prepared a comprehensive step-by-step guide to help you understand the exploit path.
 
-### 📖 [Read the Walkthrough](WALKTHROUGH.md)
+### 📖 Choose your language:
+*   🇬🇧 **[English Walkthrough](WALKTHROUGH_EN.md)**
+*   🇪🇸 **[Guía en Español](WALKTHROUGH_ES.md)**
 
 This document explains:
 1.  **Setup**: How to verify the environment.
