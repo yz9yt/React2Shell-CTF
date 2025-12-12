@@ -4,6 +4,8 @@
 ![React](https://img.shields.io/badge/Vulnerability-CVE--2025--55182-critical?style=for-the-badge&logo=react&logoColor=black)
 ![Education](https://img.shields.io/badge/Purpose-Education-success?style=for-the-badge)
 
+![WebSite CTF](./ctf_website.png)
+
 Welcome to **React2Shell-CTF**, a Dockerized environment designed to practice exploiting **React2Shell (CVE-2025-55182)**.
 
 **React2Shell** is a critical vulnerability affecting React-based applications. This repository provides a safe, locally deployable Capture The Flag (CTF) challenge to help you understand and mitigate this flaw. **Can you pop a Reverse Shell?** 🐚
